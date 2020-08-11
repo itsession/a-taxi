@@ -14,20 +14,20 @@ let toA = '';
 let commentA = '';
 
 
-
+let flagSession = false;
 
 const server = micro(async (req, res) => {
     const { request, session } = await micro.json(req);
     return {
         response: {
             text: session.new
-                ? 'Привет, я ваш голосовой помощник А такси. Назовите свой табельный номер.'
+                ? hello()
                 : (tabelNumber === '') ? tabelNumberText(request.command)
                     : (from === '') ? fromText(request.command)
                         : (to === '') ? toText(request.command)
                             : commentText(request.command),
             tts: session.new
-                ? '<speaker audio="alice-sounds-things-car-1.opus">Привет, я ваш голосовой помощник А такси. Назовите свой табельный номер.'
+                ? helloA()
                 : (tabelNumberA === '') ? tabelNumberAudio(request.command)
                     : (fromA === '') ? fromAudio(request.command)
                         : (toA === '') ? toAudio(request.command)
@@ -36,7 +36,7 @@ const server = micro(async (req, res) => {
                 { title: 'Хватит', hide: true },
 
             ],
-            end_session: false
+            end_session: flagSession
         },
         version: '1.0'
     };
@@ -44,25 +44,50 @@ const server = micro(async (req, res) => {
 
 // command.match(/[0-9]+/) можно попробовать использование регулярного выражения 
 
+function hello() {
+    flagSession = false;
+    return 'Привет, я ваш голосовой помощник А такси. Назовите свой табельный номер.'
+}
+
+function helloA() {
+    flagSession = false;
+    return '<speaker audio="alice-sounds-things-car-1.opus">Привет, я ваш голосовой помощник А такси. Назовите свой табельный номер.'
+}
+
 function tabelNumberText(command) {
+
+    tabelNumber = command;
     console.log(command)
-    if (command === "1607") {
-        tabelNumber = command;
-        return 'Хорошо. Назовите место откуда собираетесь ехать.'
-    }
+    console.log(tabelNumber, from, to, comment)
+    return 'Хорошо. Назовите место откуда собираетесь ехать.'
+
 }
 
 function fromText(command) {
-    console.log(command)
-    from = command;
+    if (command === 'ангар 5' || command === 'кпп 12' || command === 'кпп 8' || command === 'кпп 6' || command === 'кпп 5' || command === 'зона д' || command === 'зона е' || command === 'зона ф' || command === 'зона б2' || command === 'зона ш2' || command === 'зона ш1' || command === 'зона б' || command === 'зона ц' || command === 'зона б1' || command === 'западная зона' || command === 'берлин ш1' || command === 'берлин ш2' || command === 'ангар аэрофлот' || command === 'склад ак россии') {
+        from = command;
+        console.log(command)
+        console.log(tabelNumber, from, to, comment)
 
-    return `Ваш табельный номер ${tabelNumber}. Точка отправки ${from}. Теперь назовите место куда хотите поехать`
+        return `Ваш табельный номер ${tabelNumber}. Точка отправки ${from}. Теперь назовите место куда хотите поехать`
+    } else {
+        return 'Такой точки отправления не существует. Назовите действующую точку отправления А такси'
+    }
+
 
 }
 
 function toText(command) {
-    to = command;
-    return `Ваш табельный номер ${tabelNumber}. Маршрут ${from}-${to}. Теперь скажите номер стоянки и количество человек с Вами, либо скажите без комментариев`
+
+    if (command === 'ангар 5' || command === 'кпп 12' || command === 'кпп 8' || command === 'кпп 6' || command === 'кпп 5' || command === 'зона д' || command === 'зона е' || command === 'зона ф' || command === 'зона б2' || command === 'зона ш2' || command === 'зона ш1' || command === 'зона б' || command === 'зона ц' || command === 'зона б1' || command === 'западная зона' || command === 'берлин ш1' || command === 'берлин ш2' || command === 'ангар аэрофлот' || command === 'склад ак россии') {
+        to = command;
+        console.log(command)
+        console.log(tabelNumber, from, to, comment)
+
+        return `Ваш табельный номер ${tabelNumber}. Маршрут ${from}-${to}. Теперь добавьте комментарий с номером стоянки и количеством человек с Вами`
+    } else {
+        return 'Такой точки отправления не существует. Назовите действующую точку отправления А такси'
+    }
 
 }
 
@@ -72,30 +97,50 @@ function commentText(command) {
     from = '';
     to = '';
     comment = '';
-    return `Здорово. Заявка создана. Ожидайте Ваше такси`
+    console.log(command)
+    console.log(tabelNumber, from, to, comment)
+
+    flagSession = true
+    return `Здорово. Заявка создана. Ожидайте Ваше такси `
 
 }
 
 function tabelNumberAudio(command) {
-    console.log(command)
-    if (command === "1607") {
-        tabelNumberA = command;
-        return 'Хорошо. Назовите место откуда собираетесь ехать.'
-    }
+
+
+    tabelNumberA = command;
+    console.log("A", command)
+    console.log("A", tabelNumberA, fromA, toA, commentA)
+
+    return 'Хорошо. Назовите место откуда собираетесь ехать.'
+
 }
 
 function fromAudio(command) {
-    console.log(command)
-    fromA = command;
-
-    return `Ваш табельный номер ${tabelNumber}. Точка отправки ${from}. Теперь назовите место куда хотите поехать`
+    // console.log(command)
+    // fromA = command;
+    // console.log("A", command)
+    // console.log("A", tabelNumberA, fromA, toA, commentA)
+    // return `Ваш табельный номер ${tabelNumber}. Точка отправки ${from}. Теперь назовите место куда хотите поехать`
+    if (command === 'ангар 5' || command === 'кпп 12' || command === 'кпп 8' || command === 'кпп 6' || command === 'кпп 5' || command === 'зона д' || command === 'зона е' || command === 'зона ф' || command === 'зона б2' || command === 'зона ш2' || command === 'зона ш1' || command === 'зона б' || command === 'зона ц' || command === 'зона б1' || command === 'западная зона' || command === 'берлин ш1' || command === 'берлин ш2' || command === 'ангар аэрофлот' || command === 'склад ак россии') {
+        fromA = command;
+        return `Ваш табельный номер ${tabelNumber}. Точка отправки ${from}. Теперь назовите место куда хотите поехать`
+    } else {
+        return 'Такой точки отправления не существует. Назовите действующую точку отправления А такси'
+    }
 
 }
 
 function toAudio(command) {
-    toA = command;
-    return `Ваш табельный номер ${tabelNumber}. Маршрут ${from}-${to}. Теперь скажите номер стоянки и количество человек с Вами, либо скажите без комментариев`
+    if (command === 'ангар 5' || command === 'кпп 12' || command === 'кпп 8' || command === 'кпп 6' || command === 'кпп 5' || command === 'зона д' || command === 'зона е' || command === 'зона ф' || command === 'зона б2' || command === 'зона ш2' || command === 'зона ш1' || command === 'зона б' || command === 'зона ц' || command === 'зона б1' || command === 'западная зона' || command === 'берлин ш1' || command === 'берлин ш2' || command === 'ангар аэрофлот' || command === 'склад ак россии') {
+        toA = command;
+        console.log(command)
+        console.log(tabelNumber, from, to, comment)
 
+        return `Ваш табельный номер ${tabelNumber}. Маршрут ${from}-${to}. Теперь добавьте комментарий с номером стоянки и количеством человек с Вами`
+    } else {
+        return 'Такой точки отправления не существует. Назовите действующую точку отправления А такси'
+    }
 }
 
 function commentAudio(command) {
@@ -104,6 +149,9 @@ function commentAudio(command) {
     fromA = '';
     toA = '';
     commentA = '';
+    console.log("A", command)
+    console.log("A", tabelNumberA, fromA, toA, commentA)
+    flagSession = true
     return `Здорово. Заявка создана. Ожидайте Ваше такси`
 
 }
