@@ -16,15 +16,15 @@ const server = micro(async (req, res) => {
         response: {
             text: session.new
                 ? 'Привет, я ваш голосовой помощник А такси. Назовите свой табельный номер.'
-                : (tabelNumber = '') ? tabelNumberText(request.command)
-                    : (from = '') ? fromText(request.command)
-                        : (to = '') ? toText(request.command)
+                : (tabelNumber === '') ? tabelNumberText(request.command)
+                    : (from === '') ? fromText(request.command)
+                        : (to === '') ? toText(request.command)
                             : commentText(request.command),
             tts: session.new
                 ? '<speaker audio="alice-sounds-things-car-1.opus">Привет, я ваш голосовой помощник А такси. Назовите свой табельный номер.'
-                : (tabelNumber = '') ? tabelNumberAudio(request.command)
-                    : (from = '') ? fromAudio(request.command)
-                        : (to = '') ? toAudio(request.command)
+                : (tabelNumber === '') ? tabelNumberAudio(request.command)
+                    : (from === '') ? fromAudio(request.command)
+                        : (to === '') ? toAudio(request.command)
                             : commentAudio(request.command),
             buttons: [
                 { title: 'Хватит', hide: true },
@@ -93,7 +93,6 @@ function toAudio(command) {
 }
 
 function commentAudio(command) {
-    comment = command;
     comment = command;
     tabelNumber = '';
     from = '';
