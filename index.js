@@ -8,6 +8,12 @@ let from = '';
 let to = '';
 let comment = '';
 
+let tabelNumberA = '';
+let fromA = '';
+let toA = '';
+let commentA = '';
+
+
 
 
 const server = micro(async (req, res) => {
@@ -22,9 +28,9 @@ const server = micro(async (req, res) => {
                             : commentText(request.command),
             tts: session.new
                 ? '<speaker audio="alice-sounds-things-car-1.opus">Привет, я ваш голосовой помощник А такси. Назовите свой табельный номер.'
-                : (tabelNumber === '') ? tabelNumberAudio(request.command)
-                    : (from === '') ? fromAudio(request.command)
-                        : (to === '') ? toAudio(request.command)
+                : (tabelNumberA === '') ? tabelNumberAudio(request.command)
+                    : (fromA === '') ? fromAudio(request.command)
+                        : (toA === '') ? toAudio(request.command)
                             : commentAudio(request.command),
             buttons: [
                 { title: 'Хватит', hide: true },
@@ -73,31 +79,31 @@ function commentText(command) {
 function tabelNumberAudio(command) {
     console.log(command)
     if (command === "1607") {
-        tabelNumber = command;
+        tabelNumberA = command;
         return 'Хорошо. Назовите место откуда собираетесь ехать.'
     }
 }
 
 function fromAudio(command) {
     console.log(command)
-    from = command;
+    fromA = command;
 
     return `Ваш табельный номер ${tabelNumber}. Точка отправки ${from}. Теперь назовите место куда хотите поехать`
 
 }
 
 function toAudio(command) {
-    to = command;
+    toA = command;
     return `Ваш табельный номер ${tabelNumber}. Маршрут ${from}-${to}. Теперь скажите номер стоянки и количество человек с Вами, либо скажите без комментариев`
 
 }
 
 function commentAudio(command) {
-    comment = command;
-    tabelNumber = '';
-    from = '';
-    to = '';
-    comment = '';
+    commentA = command;
+    tabelNumberA = '';
+    fromA = '';
+    toA = '';
+    commentA = '';
     return `Здорово. Заявка создана. Ожидайте Ваше такси`
 
 }
