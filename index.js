@@ -46,11 +46,19 @@ const server = micro(async (req, res) => {
 
 function hello() {
     flagSession = false;
+    tabelNumber = '';
+    from = '';
+    to = '';
+    comment = '';
     return 'Привет, я ваш голосовой помощник А такси. Назовите свой табельный номер.'
 }
 
 function helloA() {
     flagSession = false;
+    tabelNumberA = '';
+    fromA = '';
+    toA = '';
+    commentA = '';
     return '<speaker audio="alice-sounds-things-car-1.opus">Привет, я ваш голосовой помощник А такси. Назовите свой табельный номер.'
 }
 
@@ -101,7 +109,7 @@ function commentText(command) {
     console.log(tabelNumber, from, to, comment)
 
     flagSession = true
-    return `Здорово. Заявка создана. Ожидайте Ваше такси `
+    return `Здорово. Заявка создана. Ожидайте Ваше такси. Спасибо за использование голосового помощника А такси`
 
 }
 
@@ -152,7 +160,7 @@ function commentAudio(command) {
     console.log("A", command)
     console.log("A", tabelNumberA, fromA, toA, commentA)
     flagSession = true
-    return `Здорово. Заявка создана. Ожидайте Ваше такси`
+    return `Здорово. Заявка создана. Ожидайте Ваше такси. Спасибо за использование голосового помощника А такси`
 
 }
 
