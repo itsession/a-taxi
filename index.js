@@ -32,10 +32,7 @@ const server = micro(async (req, res) => {
                     : (fromA === '') ? fromAudio(request.command)
                         : (toA === '') ? toAudio(request.command)
                             : commentAudio(request.command),
-            buttons: [
-                { title: 'Хватит', hide: true },
 
-            ],
             end_session: flagSession
         },
         version: '1.0'
